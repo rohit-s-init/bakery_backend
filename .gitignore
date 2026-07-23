@@ -1,0 +1,7 @@
+.agents/
+.claude/
+.windsurf/
+dist/
+generated/
+node_modules/
+.env

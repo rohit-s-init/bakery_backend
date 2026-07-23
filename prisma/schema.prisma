@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+// schema.prisma
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+datasource db {
+  provider = "mysql"
+}
+
+// define model according to your database table
+model user {
+    id    Int     @id @default(autoincrement())
+    email String? @unique(map: "uniq_email") @db.VarChar(255)
+    name  String? @db.VarChar(255)
+    password  String? @db.VarChar(255)
+    otp   Int?
+    verified Boolean @default(false)
+    orders   Order[]
+}
+
+model Order {
+  id                 Int      @id @default(autoincrement())
+
+  userId             Int      @map("user_id")
+  user               user     @relation(fields: [userId], references: [id])
+
+  quantity           Int
+
+  totalAmount        Decimal  @map("total_amount") @db.Decimal(10, 2)
+
+  productName        String   @map("product_name") @db.VarChar(255)
+  productDescription String   @map("product_description")
+
+  phoneNo            String   @map("phone_no") @db.VarChar(20)
+  address            String
+
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  @@map("orders")
+}
