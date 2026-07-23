@@ -29,6 +29,10 @@ app.use(cors({
 app.use("/api/user", authRouter);
 app.use("/api/order", orderRouter);
 
+app.get("/",(req,res)=>{
+    res.send("Hello From THe Bakery Backend");
+})
+
 // query after insert
 console.log(await prisma.user.findMany())
 
