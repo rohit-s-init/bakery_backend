@@ -41,7 +41,7 @@ export async function verifyUser(req: express.Request, res: express.Response) {
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
 
@@ -70,7 +70,7 @@ export async function loginUser(req: express.Request, res: express.Response) {
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
 
@@ -115,7 +115,7 @@ export async function logoutUser(req: express.Request, res: express.Response) {
         res.clearCookie("token", {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
+            sameSite: "none",
         });
 
         return res.status(200).json({
@@ -176,7 +176,7 @@ export async function googleLogin(req: express.Request, res: express.Response) {
         res.cookie("token", jwt, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
