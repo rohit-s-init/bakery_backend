@@ -21,8 +21,22 @@ const app = express();
 app.use(express.static("public"));
 app.use(cookieParser());
 
+const allowedOrigins = [
+    "http://localhost:8080",          // local development
+    "https://bakery-frontend-sandy.vercel.app", // deployed frontend
+];
+
 app.use(cors({
-    origin: "http://localhost:8080", // your frontend
+    origin: (origin, callback) => {
+        // Allow requests without an Origin header (Postman, curl, etc.)
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
     credentials: true,
 }));
 
