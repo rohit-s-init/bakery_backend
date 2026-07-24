@@ -65,6 +65,8 @@ export async function loginUser(req: express.Request, res: express.Response) {
 
         const user = await login(data.email, data.password);
 
+        console.log(user);
+
         const token = generateToken(user.id, user.email as string);
 
         res.cookie("token", token, {
@@ -79,6 +81,7 @@ export async function loginUser(req: express.Request, res: express.Response) {
             user,
         });
     } catch (err: any) {
+        console.log(err);
         res.status(400).json({
             success: false,
             message: err.message,
