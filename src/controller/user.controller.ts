@@ -45,6 +45,16 @@ export async function verifyUser(req: express.Request, res: express.Response) {
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         });
 
+        res.cookie("user", JSON.stringify({
+            id: user.id,
+            name: user.name,
+        }), {
+            httpOnly: false,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "none",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
         res.status(200).json({
             success: true,
             message: "Email verified successfully.",
@@ -74,6 +84,17 @@ export async function loginUser(req: express.Request, res: express.Response) {
             secure: process.env.NODE_ENV === "production",
             sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+
+        res.cookie("user", JSON.stringify({
+            id: user.id,
+            name: user.name,
+        }), {
+            httpOnly: false,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "none",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            path: "/"
         });
 
         res.status(200).json({
