@@ -42,6 +42,14 @@ export async function sendMail({
             html,
         });
 
+        console.log("Before verify");
+
+        await transporter.verify();
+
+        console.log("After verify");
+
+        console.log("Before send");
+
         console.log(`Email sent to ${to}`);
         return true;
     } catch (error) {
