@@ -1,6 +1,5 @@
 import express from "express";
 import { addOrder, getOrdersByUserId } from "../service/db/order.js";
-import emitGa from "../service/ga/ga.js";
 
 export async function createOrder(req: express.Request, res: express.Response) {
     try {
@@ -14,23 +13,23 @@ export async function createOrder(req: express.Request, res: express.Response) {
             address: req.body.address,
         });
 
-        try {
-            await emitGa(req, [
-                {
-                    name: "purchase",
-                    params: {
-                        transaction_id: order.id.toString(),
-                        currency: "INR",
-                        value: req.body.totalAmount,
-                        item_name: req.body.productName,
-                        quantity: req.body.quantity,
-                        price: req.body.totalAmount,
-                    },
-                },
-            ]);
-        } catch (error) {
-            console.log("error in ga "+error);
-        }
+        // try {
+        //     await emitGa(req, [
+        //         {
+        //             name: "purchase",
+        //             params: {
+        //                 transaction_id: order.id.toString(),
+        //                 currency: "INR",
+        //                 value: req.body.totalAmount,
+        //                 item_name: req.body.productName,
+        //                 quantity: req.body.quantity,
+        //                 price: req.body.totalAmount,
+        //             },
+        //         },
+        //     ]);
+        // } catch (error) {
+        //     console.log("error in ga "+error);
+        // }
 
         res.status(201).json({
             success: true,
