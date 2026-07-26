@@ -17,6 +17,14 @@ export async function sendMail({
 }: MailOptions): Promise<boolean> {
     console.log("pass in email")
     try {
+
+        console.log({
+            host: process.env.SMTP_HOST,
+            port: process.env.SMTP_PORT,
+            user: process.env.SMTP_USER,
+            hasPass: !!process.env.SMTP_PASS,
+        });
+
         const transporter = nodemailer.createTransport({
             host: process.env.SMTP_HOST,
             port: Number(process.env.SMTP_PORT),
