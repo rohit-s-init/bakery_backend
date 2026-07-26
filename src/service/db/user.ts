@@ -15,11 +15,29 @@ export async function register(data: {
         },
     });
 
-    if (existing && existing.verified) {
-        throw new Error("Email already exists");
-    }
-
     const otp = generateOTP();
+
+    if (existing) {
+        if (existing.verified) {
+            throw new Error("Email already exists");
+        }
+
+        const user = await prisma.user.update({
+            where: {
+                email: data.email,
+            },
+            data: {
+                name: data.name,
+                password: data.password,
+                otp,
+            },
+        });
+
+        return {
+            user,
+            otp,
+        };
+    }
 
     const user = await prisma.user.create({
         data: {
