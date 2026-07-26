@@ -5,10 +5,23 @@ import type { LoginDAO, RegisterDAO, UserDAO, VerifyDAO } from "../types/user.in
 import { generateToken } from "../service/jwt/jwt.js";
 
 import { OAuth2Client } from "google-auth-library";
+import emitGa from "../service/ga/ga.js";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export async function registerUser(req: express.Request, res: express.Response) {
+
+    try {
+        await emitGa(req, [{
+            name: "sign_up",
+            params: {
+                method: "email"
+            }
+        }])
+    } catch (error) {
+        console.log("error in ga" + error);
+    }
+
     try {
         const data: RegisterDAO = req.body;
 
@@ -29,6 +42,7 @@ export async function registerUser(req: express.Request, res: express.Response) 
 }
 
 export async function verifyUser(req: express.Request, res: express.Response) {
+
     try {
         const data: VerifyDAO = req.body;
 
@@ -70,6 +84,18 @@ export async function verifyUser(req: express.Request, res: express.Response) {
 }
 
 export async function loginUser(req: express.Request, res: express.Response) {
+
+    try {
+        await emitGa(req, [{
+            name: "login",
+            params: {
+                method: "email"
+            }
+        }])
+    } catch (error) {
+        console.log("error in ga" + error);
+    }
+
     try {
         const data: LoginDAO = req.body;
 
@@ -115,6 +141,7 @@ export async function loginUser(req: express.Request, res: express.Response) {
 }
 
 export async function getMe(req: express.Request, res: express.Response) {
+
     try {
         if (!req.user) {
             return res.status(401).json({
@@ -136,6 +163,16 @@ export async function getMe(req: express.Request, res: express.Response) {
 }
 
 export async function logoutUser(req: express.Request, res: express.Response) {
+
+    try {
+        await emitGa(req, [{
+            name: "logout",
+            params: {}
+        }])
+    } catch (error) {
+        console.log("error in ga" + error);
+    }
+
     try {
         res.clearCookie("token", {
             httpOnly: true,
@@ -163,6 +200,18 @@ export async function logoutUser(req: express.Request, res: express.Response) {
 }
 
 export async function googleLogin(req: express.Request, res: express.Response) {
+
+    try {
+        await emitGa(req, [{
+            name: "sign_up",
+            params: {
+                method: "google"
+            }
+        }])
+    } catch (error) {
+        console.log("error in ga" + error);
+    }
+
     try {
         const { token } = req.body;
 
