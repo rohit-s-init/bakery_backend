@@ -33,6 +33,8 @@ export async function sendMail({
                 user: process.env.SMTP_USER,
                 pass: process.env.SMTP_PASS,
             },
+            logger: true,
+            debug: true,
         });
         await transporter.sendMail({
             from: `"SmartWatch AI" <${process.env.SMTP_USER}>`,
