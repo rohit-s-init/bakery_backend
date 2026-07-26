@@ -36,7 +36,7 @@ export async function verifyUser(req: express.Request, res: express.Response) {
 
         const user = await getByEmail(data.email);
 
-        const token = generateToken(user.id, user.email as string);
+        const token = generateToken(user.id, user.email as string, user.name as string, user.verified);
 
         res.cookie("token", token, {
             httpOnly: true,
@@ -48,6 +48,8 @@ export async function verifyUser(req: express.Request, res: express.Response) {
         res.cookie("user", JSON.stringify({
             id: user.id,
             name: user.name,
+            email: user.email,
+            verified: user.verified
         }), {
             httpOnly: false,
             secure: process.env.NODE_ENV === "production",
@@ -77,7 +79,7 @@ export async function loginUser(req: express.Request, res: express.Response) {
 
         console.log(user);
 
-        const token = generateToken(user.id, user.email as string);
+        const token = generateToken(user.id, user.email as string, user.name as string, user.verified);
 
         res.cookie("token", token, {
             httpOnly: true,
@@ -89,6 +91,8 @@ export async function loginUser(req: express.Request, res: express.Response) {
         res.cookie("user", JSON.stringify({
             id: user.id,
             name: user.name,
+            email: user.email,
+            verified: user.verified
         }), {
             httpOnly: false,
             secure: process.env.NODE_ENV === "production",
@@ -112,21 +116,18 @@ export async function loginUser(req: express.Request, res: express.Response) {
 
 export async function getMe(req: express.Request, res: express.Response) {
     try {
-        const user = await getUserById(req.user.id);
-
-        if (!user) {
-            return res.status(404).json({
+        if (!req.user) {
+            return res.status(401).json({
                 success: false,
-                message: "User not found",
+                message: "Invalid session",
             });
         }
 
         return res.status(200).json({
             success: true,
-            user,
+            user: req.user,
         });
     } catch (err) {
-        console.log(err);
         return res.status(500).json({
             success: false,
             message: "Internal server error",
@@ -138,6 +139,11 @@ export async function logoutUser(req: express.Request, res: express.Response) {
     try {
         res.clearCookie("token", {
             httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "none",
+        });
+
+        res.clearCookie("user", {
             secure: process.env.NODE_ENV === "production",
             sameSite: "none",
         });
@@ -195,7 +201,7 @@ export async function googleLogin(req: express.Request, res: express.Response) {
             payload.name ?? ""
         );
 
-        const jwt = generateToken(user.id, user.email as string);
+        const jwt = generateToken(user.id, user.email as string, user.name as string, user.verified);
 
         res.cookie("token", jwt, {
             httpOnly: true,
@@ -203,6 +209,23 @@ export async function googleLogin(req: express.Request, res: express.Response) {
             sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000,
         });
+
+        res.cookie(
+            "user",
+            JSON.stringify({
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                verified: user.verified,
+            }),
+            {
+                httpOnly: false,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "none",
+                maxAge: 7 * 24 * 60 * 60 * 1000,
+                path: "/",
+            }
+        );
 
         return res.status(200).json({
             success: true,

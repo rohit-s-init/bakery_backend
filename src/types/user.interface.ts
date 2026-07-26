@@ -28,4 +28,7 @@ export interface UserDAO {
 export interface UserPayload {
     id: number;
     email: string;
+    name: string;
+    verified: boolean;
+
 }

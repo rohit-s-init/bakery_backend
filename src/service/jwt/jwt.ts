@@ -3,11 +3,13 @@ import type { UserPayload } from "../../types/user.interface.js";
 
 const SECRET = process.env.JWT_SECRET!;
 
-export function generateToken(id: number, email: string) {
+export function generateToken(id: number, email: string,name : string, verified: boolean ) {
     return jwt.sign(
         {
             id,
             email,
+            name,
+            verified
         },
         SECRET,
         {
