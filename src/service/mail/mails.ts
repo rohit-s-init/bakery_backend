@@ -1,7 +1,3 @@
-import nodemailer from "nodemailer";
-
-
-
 export interface MailOptions {
     to: string;
     subject: string;
@@ -15,47 +11,40 @@ export async function sendMail({
     html,
     text,
 }: MailOptions): Promise<boolean> {
-    console.log("pass in email")
     try {
+        console.log("Calling Mail API...");
 
-        console.log({
-            host: process.env.SMTP_HOST,
-            port: process.env.SMTP_PORT,
-            user: process.env.SMTP_USER,
-            hasPass: !!process.env.SMTP_PASS,
-        });
-
-        const transporter = nodemailer.createTransport({
-            host: process.env.SMTP_HOST,
-            port: Number(process.env.SMTP_PORT),
-            secure: Number(process.env.SMTP_PORT) === 465,
-            auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS,
+        const response = await fetch(process.env.MAIL_API_URL!, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-api-key": process.env.MAIL_API_KEY!,
             },
-            logger: true,
-            debug: true,
-        });
-        await transporter.sendMail({
-            from: `"SmartWatch AI" <${process.env.SMTP_USER}>`,
-            to,
-            subject,
-            text,
-            html,
+            body: JSON.stringify({
+                to,
+                subject,
+                html,
+                text,
+            }),
         });
 
-        console.log("Before verify");
+        console.log("Status:", response.status);
+        console.log("OK:", response.ok);
 
-        await transporter.verify();
+        const body = await response.json();
 
-        console.log("After verify");
+        console.log("Response:");
+        console.log(body);
 
-        console.log("Before send");
+        if (!response.ok || !body.success) {
+            console.error("Mail API returned an error.");
+            return false;
+        }
 
-        console.log(`Email sent to ${to}`);
+        console.log(`Email sent successfully to ${to}`);
         return true;
     } catch (error) {
-        console.error("Failed to send email:", error);
+        console.error("Failed to call Mail API:", error);
         return false;
     }
 }
