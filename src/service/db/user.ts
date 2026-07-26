@@ -15,7 +15,7 @@ export async function register(data: {
         },
     });
 
-    if (existing) {
+    if (existing && existing.verified) {
         throw new Error("Email already exists");
     }
 

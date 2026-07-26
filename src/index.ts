@@ -43,13 +43,13 @@ app.use(cors({
 app.use("/api/user", authRouter);
 app.use("/api/order", orderRouter);
 
-app.get("/",(req,res)=>{
+app.get("/", (req, res) => {
     res.send("Hello From THe Bakery Backend");
 })
 
 // query after insert
-console.log(await prisma.user.findMany())
 
-app.listen(process.env.PORT || 9000, () => {
+app.listen(process.env.PORT || 9000, async () => {
+    console.log(await prisma.user.findMany())
     console.log("localhost:9000/");
 })
