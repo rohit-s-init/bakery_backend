@@ -44,3 +44,21 @@ model Order {
 
   @@map("orders")
 }
+
+model Message {
+  id        Int      @id @default(autoincrement())
+
+  userId    Int
+
+  role      MessageRole
+  content   String   @db.LongText
+
+  createdAt DateTime @default(now())
+
+  @@map("messages")
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+}

@@ -12,6 +12,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/user/auth.js";
 import orderRouter from "./routes/order/order.js";
+import airouter from "./routes/ai/ai.js";
 
 
 dotenv.config();
@@ -42,6 +43,7 @@ app.use(cors({
 
 app.use("/api/user", authRouter);
 app.use("/api/order", orderRouter);
+app.use("/api/bot", airouter);
 
 app.get("/", (req, res) => {
     res.send("Hello From THe Bakery Backend");
@@ -50,6 +52,7 @@ app.get("/", (req, res) => {
 // query after insert
 
 app.listen(process.env.PORT || 9000, async () => {
-    console.log(await prisma.user.findMany())
+    // console.log(await prisma.user.findMany())
+    // console.log(await aiResp());
     console.log("localhost:9000/");
 })

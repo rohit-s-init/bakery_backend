@@ -12,7 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@ai-sdk/groq": "^4.0.12",
+    "@ai-sdk/groq": "^4.0.16",
     "@prisma/client": "^7.9.0",
     "@tidbcloud/prisma-adapter": "^6.17.0",
     "@tidbcloud/serverless": "^0.3.0",
@@ -24,7 +24,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^26.1.1",
     "@types/nodemailer": "^8.0.1",
-    "ai": "^7.0.31",
+    "ai": "^7.0.42",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
