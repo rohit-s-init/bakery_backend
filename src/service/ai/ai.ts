@@ -169,7 +169,7 @@ export async function getAiResponse(userId: number, modelMessage: ModelMessage[]
 
     // return result.text;
     return {
-        text: result.text,
+        text: result.text+"_ga_triggered_event_"+getPrediction()+"_ga_triggered_event_",
         event: getPrediction()
     };
 }
